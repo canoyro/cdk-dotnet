@@ -12,7 +12,12 @@ export class CdkDotnetStack extends cdk.Stack {
     const siteSourcePath = this.node.tryGetContext('siteSourcePath') ?? 'website-dist';
 
     const siteBucket = new s3.Bucket(this, 'DotnetWebSiteBucket', {
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+      blockPublicAccess: new s3.BlockPublicAccess({
+        blockPublicAcls: true,
+        ignorePublicAcls: true,
+        blockPublicPolicy: false,
+        restrictPublicBuckets: false,
+      }),
       publicReadAccess: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
