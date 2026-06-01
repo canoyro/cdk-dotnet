@@ -8,8 +8,7 @@ if ([string]::IsNullOrWhiteSpace($IisWebRoot)) {
     throw "IIS_WEB_ROOT is required. Example: C:\inetpub\wwwroot"
 }
 
-$packageRoot = Split-Path -Parent $PSScriptRoot
-$siteSource = Join-Path $packageRoot "website-dist"
+$siteSource = Join-Path $PSScriptRoot "website-dist"
 
 if (-not (Test-Path -LiteralPath $siteSource)) {
     throw "website-dist was not found in the extracted package at: $siteSource"

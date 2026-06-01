@@ -15,11 +15,7 @@ cd "$repo_root"
 rm -rf "$staging_root" "$package_path"
 mkdir -p "$staging_root"
 
-cp -R \
-  octopus \
-  website-dist \
-  "$staging_root/"
-
+cp -R website-dist "$staging_root/"
 cp octopus/deploy.ps1 "$staging_root/deploy.ps1"
 
 (
