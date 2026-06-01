@@ -20,6 +20,8 @@ cp -R \
   website-dist \
   "$staging_root/"
 
+cp octopus/deploy.ps1 "$staging_root/deploy.ps1"
+
 (
   cd "$staging_root"
   zip -r "$package_path" .

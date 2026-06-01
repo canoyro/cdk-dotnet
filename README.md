@@ -20,7 +20,7 @@ Octopus should deploy the immutable TeamCity package to the Windows IIS server:
 
 ```powershell
 $env:IIS_WEB_ROOT = "C:\inetpub\wwwroot"
-.\octopus\deploy.ps1
+.\deploy.ps1
 ```
 
 This keeps CI and CD separate: TeamCity produces the artifact once, then Octopus
