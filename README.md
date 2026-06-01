@@ -16,17 +16,15 @@ bash ./teamcity/build.sh
 PACKAGE_VERSION="%build.number%" bash ./teamcity/package.sh
 ```
 
-Octopus should deploy the immutable TeamCity package:
+Octopus should deploy the immutable TeamCity package to the Windows IIS server:
 
-```bash
-IIS_WEB_ROOT="/c/inetpub/wwwroot" bash ./octopus/deploy.sh
+```powershell
+$env:IIS_WEB_ROOT = "C:\inetpub\wwwroot"
+.\octopus\deploy.ps1
 ```
 
 This keeps CI and CD separate: TeamCity produces the artifact once, then Octopus
 promotes that same artifact through environments.
-
-For a Windows Octopus Tentacle running Git Bash, `IIS_WEB_ROOT` should use the
-Git Bash path form for the IIS folder, for example `/c/inetpub/wwwroot`.
 
 ## Useful commands
 
