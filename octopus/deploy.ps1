@@ -4,6 +4,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+if ([string]::IsNullOrWhiteSpace($IisWebRoot) -and (Test-Path variable:OctopusParameters)) {
+    $IisWebRoot = $OctopusParameters["IIS_WEB_ROOT"]
+}
+
 if ([string]::IsNullOrWhiteSpace($IisWebRoot)) {
     throw "IIS_WEB_ROOT is required. Example: C:\inetpub\wwwroot"
 }
