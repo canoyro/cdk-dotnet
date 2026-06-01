@@ -7,8 +7,8 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 artifact_root="$repo_root/.artifacts"
 # staging_root="$artifact_root/$package_name.$package_version"
 # package_path="$artifact_root/$package_name.$package_version.zip"
-staging_root="$artifact_root/$package_version"
-package_path="$artifact_root/$package_version.zip"
+staging_root="$artifact_root/$package_name.$package_version"
+package_path="$artifact_root/$package_name.$package_version.zip"
 
 cd "$repo_root"
 
