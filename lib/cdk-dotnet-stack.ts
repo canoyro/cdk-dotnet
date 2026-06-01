@@ -10,37 +10,33 @@ export class CdkDotnetStack extends cdk.Stack {
 
     const environmentName = this.node.tryGetContext('environment') ?? 'dev';
     const siteSourcePath = this.node.tryGetContext('siteSourcePath') ?? 'website-dist';
+    const siteArtifactPrefix = `${environmentName}/site`;
 
-    const siteBucket = new s3.Bucket(this, 'DotnetWebSiteBucket', {
-      blockPublicAccess: new s3.BlockPublicAccess({
-        blockPublicAcls: true,
-        ignorePublicAcls: true,
-        blockPublicPolicy: false,
-        restrictPublicBuckets: false,
-      }),
-      publicReadAccess: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-      autoDeleteObjects: true,
-      websiteIndexDocument: 'index.html',
-      websiteErrorDocument: 'index.html',
+    const siteArtifactBucket = new s3.Bucket(this, 'DotnetWebSiteArtifactBucket', {
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
     });
 
-    new s3deploy.BucketDeployment(this, 'DotnetWebSiteDeployment', {
+    new s3deploy.BucketDeployment(this, 'DotnetWebSiteArtifactDeployment', {
       sources: [s3deploy.Source.asset(path.join(__dirname, '..', siteSourcePath))],
-      destinationBucket: siteBucket,
+      destinationBucket: siteArtifactBucket,
+      destinationKeyPrefix: siteArtifactPrefix,
+      prune: true,
     });
 
     new cdk.CfnOutput(this, 'EnvironmentName', {
       value: environmentName,
     });
 
-    new cdk.CfnOutput(this, 'WebsiteBucketName', {
-      value: siteBucket.bucketName,
+    new cdk.CfnOutput(this, 'WebsiteArtifactBucketName', {
+      value: siteArtifactBucket.bucketName,
     });
 
-    new cdk.CfnOutput(this, 'WebsiteUrl', {
-      value: siteBucket.bucketWebsiteUrl,
-      description: 'Public URL for the low-cost .NET static web app.',
+    new cdk.CfnOutput(this, 'WebsiteArtifactPrefix', {
+      value: siteArtifactPrefix,
+      description: 'S3 prefix containing files to copy onto the existing IIS server.',
     });
   }
 }

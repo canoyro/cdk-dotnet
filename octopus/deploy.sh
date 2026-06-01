@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-stack_name="${STACK_NAME:-CdkDotnetStack}"
-environment_name="${ENVIRONMENT_NAME:-${Octopus_Environment_Name:-dev}}"
+iis_web_root="${IIS_WEB_ROOT:-}"
 
-if [[ -n "${AWS_REGION:-}" ]]; then
-  export AWS_REGION
+if [[ -z "$iis_web_root" ]]; then
+  echo "IIS_WEB_ROOT is required. Example: /c/inetpub/wwwroot"
+  exit 1
 fi
 
-npm ci
-npx cdk deploy "$stack_name" \
-  --require-approval never \
-  --context "environment=$environment_name"
+if [[ ! -d "website-dist" ]]; then
+  echo "website-dist was not found in the extracted package."
+  exit 1
+fi
+
+mkdir -p "$iis_web_root"
+find "$iis_web_root" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+cp -R website-dist/. "$iis_web_root/"
+
+echo "Copied website-dist to $iis_web_root"
